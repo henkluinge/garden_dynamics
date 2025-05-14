@@ -1,2 +1,2 @@
 # garden_dynamics
-garden planning in python.
+Create a map based on Dutch kadaster downloads. Plant some trees.
