@@ -15,8 +15,8 @@ print('crs ', crs_global)
 
 kadastrale_object_ids_own = [58270110570000, 58270073270000]
 
-def get_crs_veeleerveen(origin_lat=53.0579, origin_lon = 7.12):
-    crs_veelerveen = CRS.from_proj4(f"+proj=omerc +lat_0={origin_lat} +lonc={origin_lon} +alpha=-21 +k=1 +x_0=0 +y_0=0 +gamma=0 +ellps=WGS84 +towgs84=0,0,0,0,0,0,0")
+def get_crs_veeleerveen(origin_lat=53.0579, origin_lon = 7.12, alpha=-21):
+    crs_veelerveen = CRS.from_proj4(f"+proj=omerc +lat_0={origin_lat} +lonc={origin_lon} +alpha={alpha} +k=1 +x_0=0 +y_0=0 +gamma=0 +ellps=WGS84 +towgs84=0,0,0,0,0,0,0")
     # crs_veelerveen = CRS.from_proj4(f"+proj=omerc +lat_0={origin_lat} +lonc={origin_lon} +alpha=0 +k=1 +x_0=0 +y_0=0 +gamma=0 +ellps=WGS84 +towgs84=0,0,0,0,0,0,0")
     return crs_veelerveen
 
@@ -33,13 +33,14 @@ def _label_to_crs(crs_label):
 
 
 def get_kadaster_objects(kadastrale_object_ids=kadastrale_object_ids_own, crs_label='Amersfoort',
-                         file_path = r"./datasets/kadastralekaart_perceel.gml"):
+                         file_path = r"./datasets/kadastralekaart_perceel.gml", 
+                         distance_to_own_percelen=200):
     """ Read a gml file obtained from https://app.pdok.nl/kadaster/kadastralekaart/download-viewer/
 
         kadastrale_object_ids: list of int.
-            A kadaster area can be referred to by a code (e.g. N732) or an integer id (Kadastrale objectidentificatie). Both can be found on the eigenaars informatie from mijn Overheid.
+            A kadaster area can be referred to by a label (e.g. N732) or an integer id (Kadastrale objectidentificatie). Both can be found on the eigenaars informatie from mijn Overheid.
 
-        CRS is converted to Amerfoort crs (28992) or veelerveen coordinates.
+        CRS is converted to 'Amerfoort' crs (28992) or 'veelerveen' coordinates.
 
         returns
         -------
@@ -65,8 +66,13 @@ def get_kadaster_objects(kadastrale_object_ids=kadastrale_object_ids_own, crs_la
     db_percelen = db_percelen.to_crs(crs)
 
     # Select percelen close to own.
-    p_point = db_percelen[db.identificatie.isin(kadastrale_object_ids_own)].union_all().centroid
-    db_percelen = db_percelen[db_percelen.distance(p_point)<200]
+    if kadastrale_object_ids_own is None:
+        p_point = db_percelen[db.identificatie.isin(kadastrale_object_ids_own)].union_all().centroid
+        db_percelen = db_percelen[db_percelen.distance(p_point)<distance_to_own_percelen]
+
+    # It's common in kadaster data to combine 'sectie' and 'perceelnummer' to a single label (e.g. N123).
+    db_percelen['label'] = db_percelen['sectie'] + db_percelen['perceelnummer'].astype(str)
+    db_percelen.drop(columns=['sectie', 'perceelnummer'], inplace=True)        
 
     return db_percelen.set_index('identificatie')
 
@@ -93,18 +99,21 @@ def get_perceel_coordinates(perceel_id, crs_label=None,
     return gdf
 
 
-def add_perceel_name(ax, db_info_percelen):
-    """Print kadaster label (e.g. N1105) to plot)"""
+def add_label_annotation_to_map(ax, db_info_percelen, row_label = 'label', **kwargs):
+    """Print all labels in a goapandas dataframe labels (e.g. N1105) to plot)
+    
+        db_info_percelen: geopandas dataframe with info on perceel, including 'sectie' and 'perceelnummer' columns."""
     p = db_info_percelen.get_coordinates()
+
+    kwargs = { **{'horizontalalignment': 'center'}, **kwargs}
 
     for id, row in db_info_percelen.iterrows():
         p_i = p.loc[id]
-        if 'eigenaar' in row.index:
-            label = row.eigenaar
+        if row_label in row.index:
+            label = row[row_label]
         else:
             pass
-        label = f'{row.sectie} {row.perceelnummer}'
-        ax.annotate(label,  (p_i.x, p_i.y), horizontalalignment='center', fontweight='bold')
+        ax.annotate(label,  (p_i.x, p_i.y), **kwargs)
 
     return
 
