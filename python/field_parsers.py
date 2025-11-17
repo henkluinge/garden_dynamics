@@ -64,22 +64,33 @@ def read_range_measurements_toml(fname="measurements.toml"):
         normalized.append(ent)
     return normalized
 
-
+def _feather_coordinates(row):
+    coords = row.geometry.coords[0]
+    if len(coords) == 2:
+        return pd.Series(data=coords, index=['px', 'py'])
+    elif len(coords) == 3:
+        return pd.Series(data=coords, index=['px', 'py','pz'])
+    
+def to_regular_pandas(gdf):
+    """ Convert a GeoDataFrame to a regular DataFrame by extracting coordinates from geometry.
+    """
+    gdf = gdf.copy()
+    # coords = gdf.apply(lambda row: pd.Series(data=row.geometry.coords[0], index=['px', 'py','pz']), axis=1)
+    pxpypz = gdf.apply(_feather_coordinates, axis=1)
+    gdf[['px', 'py', 'pz']] = pxpypz
+    gdf = gdf.drop(columns=['geometry'])
+    return pd.DataFrame(gdf)
+        
 def write_gps_coordinates_to_toml(gdf_trees, filename='gdf_trees.toml', verbose=False):
     """ Export thre trees Geodataframe using in the garden_map notebook to a TOML file.
     """
     # Parse the shapely geometry to extract coordinates.
     # Get coordinates from geometry and add as columns
-    def feather_coordinates(row):
-        coords = row.geometry.coords[0]
-        if len(coords) == 2:
-            return pd.Series(data=coords, index=['px', 'py'])
-        elif len(coords) == 3:
-            return pd.Series(data=coords, index=['px', 'py','pz'])
+
     
     gdf_trees = gdf_trees.copy()
     # coords = gdf_trees.apply(lambda row: pd.Series(data=row.geometry.coords[0], index=['px', 'py','pz']), axis=1)
-    pxpypz = gdf_trees.apply(feather_coordinates, axis=1)
+    pxpypz = gdf_trees.apply(_feather_coordinates, axis=1)
     gdf_trees[['px', 'py', 'pz']] = pxpypz
     gdf_trees = gdf_trees.drop(columns=['geometry'])
 

@@ -1,4 +1,5 @@
 import numpy as np
+from python import field_parsers
 
 measurements = [
                 {'distance': [5, 4, 4.4, 0.4]},
@@ -36,24 +37,26 @@ def initialize_state_from_gps(gdf_trees, sigma_gps=4.0, sigma_corner=0.1):
     sigma_gps: standard deviation of GPS measurement noise (meters).
     sigma_corner: 
     """
+    if 'px' not in gdf_trees.columns or 'py' not in gdf_trees.columns:
+        gdf_trees = field_parsers.to_regular_pandas(gdf_trees)
 
     state_indices = {}
-    for i, row in gdf_trees.iterrows():
-        indices = 2*i + np.array([0,1])
-        label = row['label']
-        state_indices[label] = indices
+    for i_measurement, (i_tree, row) in enumerate(gdf_trees.iterrows()):
+        indices = 2*i_measurement + np.array([0,1])
+        # label = row['label']
+        state_indices[i_tree] = indices
     n_states = np.max(np.asarray(list(state_indices.values())).flatten()) + 1
 
     x = np.zeros(n_states)
     Px = np.eye(n_states)
-     
-    for label, state_index in state_indices.items():
-        s_trees = gdf_trees[gdf_trees.label==label].iloc[0]  # Series
+
+    for i_tree, state_index in state_indices.items():
+        s_trees = gdf_trees[gdf_trees.index==i_tree].iloc[0]  # Series
         # p = s_trees.geometry
         x[state_index[0]] = s_trees.px
         x[state_index[1]] = s_trees.py
         
-        if s_trees.type=='Corner':
+        if s_trees.kind=='Corner':
             sigma_init = sigma_corner
         else:
             sigma_init = sigma_gps

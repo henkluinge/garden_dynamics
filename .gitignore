@@ -5,3 +5,8 @@ __pycache__/
 *.env
 *.env_win
 *.env_unix
+datasets/kadastralekaart_kadastralegrens.gfs
+datasets/kadastralekaart_kwaliteit.gml
+datasets/kadastralekaart_openbareruimtelabel.gml
+datasets/kadastralekaart_pand.gml
+datasets/kadastralekaart_perceel.gfs
