@@ -1,0 +1,18 @@
+[project]
+name = "garden-dynamics"
+version = "0.1.0"
+description = "Combine mapping and inference."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "bokeh>=3.8.1",
+    "colorcet>=3.1.0",
+    "colormap>=1.3.0",
+    "contextily>=1.7.0",
+    "geopandas>=1.1.1",
+    "matplotlib>=3.10.7",
+    "numpy>=2.3.5",
+    "pandas>=2.3.3",
+    "ruff>=0.14.8",
+    "toml>=0.10.2",
+]

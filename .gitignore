@@ -1,0 +1,19 @@
+# Ignore all __pycache__ folders and their contents
+__pycache__/
+**/__pycache__/
+# Ignore all .pyc files
+*.pyc
+.vscode/settings.json
+uv.lock
+.python-version
+datasets/boomgaard_plant_coordinaten/flora_incognita_2025-10-05T11_09_05.csv
+datasets/boomgaard_plant_coordinaten/Modelling_landscape_dynamics_with_Python.pdf
+datasets/kadastralekaart_kadastralegrens.gfs
+.gitignore
+datasets/kadastralekaart_kwaliteit.gml
+.gitignore
+datasets/kadastralekaart_openbareruimtelabel.gml
+datasets/kadastralekaart_pand.gml
+datasets/kadastralekaart_perceel.gfs
+datasets/boomgaard_plant_coordinaten/20251005-091825.gpx
+datasets/boomgaard_plant_coordinaten/20251005-091825.kml
