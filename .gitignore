@@ -1,3 +1,15 @@
+# ignore compiled Python files
+*.pyc
+__pycache__/
+
+*.env
+*.env_win
+*.env_unix
+datasets/kadastralekaart_kadastralegrens.gfs
+datasets/kadastralekaart_kwaliteit.gml
+datasets/kadastralekaart_openbareruimtelabel.gml
+datasets/kadastralekaart_pand.gml
+datasets/kadastralekaart_perceel.gfs
 # Ignore all __pycache__ folders and their contents
 __pycache__/
 **/__pycache__/
@@ -9,9 +21,7 @@ uv.lock
 datasets/boomgaard_plant_coordinaten/flora_incognita_2025-10-05T11_09_05.csv
 datasets/boomgaard_plant_coordinaten/Modelling_landscape_dynamics_with_Python.pdf
 datasets/kadastralekaart_kadastralegrens.gfs
-.gitignore
 datasets/kadastralekaart_kwaliteit.gml
-.gitignore
 datasets/kadastralekaart_openbareruimtelabel.gml
 datasets/kadastralekaart_pand.gml
 datasets/kadastralekaart_perceel.gfs

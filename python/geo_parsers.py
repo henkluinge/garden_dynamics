@@ -1,12 +1,11 @@
-import pandas as pd
-import geopandas as gpd
 from datetime import datetime
 
-from pyproj import CRS
+import geopandas as gpd
+import pandas as pd
 import shapely
-from shapely.geometry import Point, LineString, Polygon
+from pyproj import CRS
 from shapely import affinity
-
+from shapely.geometry import LineString, Point
 
 crs_amersfoort = CRS.from_epsg(28992)
 crs_global = "WGS84"
@@ -157,8 +156,6 @@ def add_label_annotation_to_map(ax, db_info_percelen, row_label="label", **kwarg
     """Print all labels in a goapandas dataframe labels (e.g. N1105) to plot)
 
     db_info_percelen: geopandas dataframe with info on perceel, including 'sectie' and 'perceelnummer' columns."""
-    if row_label is None:
-        return
     p = db_info_percelen.get_coordinates()
 
     kwargs = {**{"horizontalalignment": "center"}, **kwargs}
