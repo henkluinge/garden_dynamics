@@ -1,6 +1,7 @@
 [project]
 name = "garden-dynamics"
 version = "0.1.0"
+<<<<<<< HEAD
 description = "Combine mapping and inference."
 readme = "README.md"
 requires-python = ">=3.13"
@@ -16,3 +17,28 @@ dependencies = [
     "ruff>=0.14.8",
     "toml>=0.10.2",
 ]
+=======
+description = "Geospatial orchard mapping and position refinement"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+  "numpy<2",
+  "pandas",
+  "matplotlib",
+  "geopandas",
+  "contextily",
+  "shapely",
+  "pyproj",
+  "toml",
+  "fiona==1.9.6",
+  "gtsam==4.2",
+  "ipykernel",
+  "bokeh>=3.9.1",
+  "colorcet>=3.2.1",
+  "colormap<1.3.0",
+  "pytz>=2026.2",
+]
+
+[tool.uv]
+package = false
+>>>>>>> Feat: works with GTSAM

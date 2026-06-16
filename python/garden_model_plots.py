@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import contextily as cx
 import matplotlib.pyplot as plt
 import numpy as np
@@ -20,6 +21,10 @@ def add_state_uncertainty_ellipse(gdf_trees, state_indices, Px, ax, **kwargs):
 
         plots.plot_cov_ellipse(Px_tree, p_tree, ax=ax, **kwargs)
     return
+=======
+import numpy as np
+import matplotlib.pyplot as plt
+>>>>>>> Feat: works with GTSAM
 
 
 def draw_annotated_arrow(ax, pA, pB, s=None, **line_kwargs):
@@ -69,6 +74,7 @@ def draw_annotated_arrow(ax, pA, pB, s=None, **line_kwargs):
         )
         # Draw the line
     ax.plot([pA[0], pB[0]], [pA[1], pB[1]], **line_kwargs)
+<<<<<<< HEAD
 
 
 def plot_trees(ax, gdf_trees, row_label="label"):
@@ -131,3 +137,5 @@ def plot_orchard(
     garden_elements.widen_map_plot(ax, percentage_x=0.1, percentage_y=0.051)
     return ax
     return ax
+=======
+>>>>>>> Feat: works with GTSAM
